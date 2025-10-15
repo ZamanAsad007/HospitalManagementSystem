@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="main_form" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="406.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HospitalManagement.Controller">
+   <children>
+      <AnchorPane fx:id="login_form" prefHeight="530.0" prefWidth="406.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="126.0" layoutY="105.0" prefHeight="35.0" prefWidth="238.0" text="Login Account">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="167.0" layoutY="149.0" text="Admin Login" />
+            <TextField fx:id="login_username" layoutX="75.0" layoutY="209.0" prefHeight="30.0" prefWidth="250.0" promptText="Username" />
+            <PasswordField fx:id="login_password" layoutX="75.0" layoutY="254.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
+            <TextField fx:id="login_showPassword" layoutX="76.0" layoutY="254.0" prefHeight="30.0" prefWidth="250.0" promptText="password" visible="false" />
+            <CheckBox fx:id="login_checkBox" layoutX="77.0" layoutY="300.0" mnemonicParsing="false" onAction="#loginShowPassword" text="Show Password" />
+            <Button fx:id="login_btn" layoutX="163.0" layoutY="335.0" mnemonicParsing="false" onAction="#loginAccount" prefHeight="24.0" prefWidth="58.0" text="Login" />
+            <Label layoutX="92.0" layoutY="458.0" text="Don't have an account?" />
+            <Hyperlink fx:id="login_resgister_here" layoutX="221.0" layoutY="455.0" onAction="#switchForm" text="Register" />
+            <ComboBox fx:id="login_user" layoutX="117.0" layoutY="393.0" onAction="#switchPage" prefWidth="150.0" promptText="Select User" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="register_form" layoutY="7.0" prefHeight="530.0" prefWidth="406.0" visible="false">
+         <children>
+            <Label layoutX="120.0" layoutY="105.0" prefHeight="35.0" prefWidth="238.0" text="Register Account">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="167.0" layoutY="149.0" text="Admin Portal" />
+            <TextField fx:id="register_username" layoutX="66.0" layoutY="240.0" prefHeight="30.0" prefWidth="250.0" promptText="Username" />
+            <PasswordField fx:id="register_password" layoutX="66.0" layoutY="281.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
+            <TextField fx:id="register_showPassword" layoutX="66.0" layoutY="281.0" prefHeight="30.0" prefWidth="250.0" promptText="password" visible="false" />
+            <CheckBox fx:id="register_checkbox" layoutX="70.0" layoutY="325.0" mnemonicParsing="false" onAction="#registerShowPassword" text="Show Password" />
+            <Button fx:id="signup_btn" layoutX="146.0" layoutY="371.0" mnemonicParsing="false" onAction="#registerAccount" prefHeight="26.0" prefWidth="91.0" text="Sign Up">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Label layoutX="99.0" layoutY="446.0" text="Already have an account?" />
+            <Hyperlink fx:id="Register_login_here" layoutX="237.0" layoutY="443.0" onAction="#switchForm" text="Login" />
+            <TextField fx:id="register_email" layoutX="66.0" layoutY="198.0" prefHeight="30.0" prefWidth="250.0" promptText="Email" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
