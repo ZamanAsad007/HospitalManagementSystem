@@ -4,9 +4,13 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -84,8 +88,9 @@ public class DoctorPageController implements Initializable {
 
     private final AlertMessage alert = new AlertMessage();
 
-    @FXML
-    void loginAccount(ActionEvent event) {
+     @FXML
+    void loginAccount() {
+
         if (login_doctorID.getText().isEmpty()
                 || login_password.getText().isEmpty()) {
             alert.errorMessage("Incorrect Doctor ID/Password");
@@ -106,7 +111,7 @@ public class DoctorPageController implements Initializable {
                     }
                 }
 
-                // CHECK IF THE STATUS OF THE DOCTOR IS CONFIRM
+                // CHECK IF THE STATUS OF THE DOCTOR IS CONFIRM 
                 String checkStatus = "SELECT status FROM doctor WHERE doctor_id = '"
                         + login_doctorID.getText() + "' AND password = '"
                         + login_password.getText() + "' AND status = 'Confirm'";
@@ -124,27 +129,27 @@ public class DoctorPageController implements Initializable {
 
                     result = prepare.executeQuery();
 
-                    // if (result.next()) {
-
-                    // Data.doctor_id = result.getString("doctor_id");
-                    // Data.doctor_name = result.getString("full_name");
-
-                    // alert.successMessage("Login Successfully!");
-
-                    // // LINK YOUR DOCTOR MAIN FORM
-                    // Parent root = FXMLLoader.load(getClass().getResource("DoctorMainForm.fxml"));
-                    // Stage stage = new Stage();
-
-                    // stage.setTitle("Hospital Management System | Doctor Main Form");
-                    // stage.setScene(new Scene(root));
-                    // stage.show();
-
-                    // // TO HIDE YOUR DOCTOR PAGE
-                    // login_btn.getScene().getWindow().hide();
-
-                    // } else {
-                    // alert.errorMessage("Incorrect Doctor ID/Password");
-                    // }
+                    if (result.next()) {
+                        
+                        Data.doctor_id = result.getString("doctor_id");
+                        Data.doctor_name = result.getString("full_name");
+                        
+                        alert.successMessage("Login Successfully!");
+                        
+                        // LINK YOUR DOCTOR MAIN FORM
+                        Parent root = FXMLLoader.load(getClass().getResource("DoctorForm.fxml"));
+                        Stage stage = new Stage();
+                        
+                        stage.setTitle("Hospital Management System | Doctor Main Form");
+                        stage.setScene(new Scene(root));
+                        stage.show();
+                        
+                        // TO HIDE YOUR DOCTOR PAGE
+                        login_btn.getScene().getWindow().hide();
+                        
+                    } else {
+                        alert.errorMessage("Incorrect Doctor ID/Password");
+                    }
                 }
 
             } catch (Exception e) {
@@ -152,6 +157,7 @@ public class DoctorPageController implements Initializable {
             }
 
         }
+
     }
 
     @FXML
@@ -351,11 +357,23 @@ public class DoctorPageController implements Initializable {
         login_user.getScene().getWindow().hide();
 
     }
+    public void userList() {
+
+        List<String> listU = new ArrayList<>();
+
+        for (String data : Users.user) {
+            listU.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableList(listU);
+        login_user.setItems(listData);
+    }
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         // userList();
         registerDoctorID();
+        userList();
     }
 
 }

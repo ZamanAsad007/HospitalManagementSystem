@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="597.0" prefWidth="1062.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HospitalManagement.doctorFormController">
+   <children>
+      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="74.0" prefWidth="974.0" style="-fx-border-color: blue;">
+         <children>
+            <Label layoutX="14.0" layoutY="28.0" text="Hospital Management System" />
+            <Label fx:id="top_username" layoutX="795.0" layoutY="28.0" text="Welcome" />
+            <Label fx:id="current_form" layoutX="254.0" layoutY="28.0" text="Dashboard" />
+            <Label fx:id="date_time" layoutX="577.0" layoutY="28.0" text="MM/DD/YYYY" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="14.0" layoutY="110.0" prefHeight="451.0" prefWidth="200.0" style="-fx-border-color: green;">
+         <children>
+            <Label layoutX="33.0" layoutY="70.0" text="Admin ID:" />
+            <Label fx:id="nav_adminID" layoutX="100.0" layoutY="70.0" text="1" />
+            <Label layoutX="33.0" layoutY="98.0" text="Username:" />
+            <Label fx:id="nav_username" layoutX="97.0" layoutY="98.0" text="Marco Man" />
+            <Line endX="61.40000915527344" endY="-1.52587890625E-5" layoutX="119.0" layoutY="135.0" startX="-100.0" />
+            <Label layoutX="70.0" layoutY="145.0" text="Feature" />
+            <Button fx:id="profile_btn" layoutX="26.0" layoutY="376.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="26.0" prefWidth="135.0" text="Profile Settings" />
+            <Button fx:id="patient_btn" layoutX="40.0" layoutY="217.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="18.0" prefWidth="87.0" text="Patient" />
+            <Button fx:id="appointment_btn" layoutX="40.0" layoutY="256.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="9.0" prefWidth="87.0" text="Appointment" />
+            <Label layoutX="69.0" layoutY="350.0" text="Profile" />
+            <Button fx:id="dashboard_btn" layoutX="40.0" layoutY="179.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="10.0" prefWidth="87.0" text="Dashboard" />
+            <Line endX="61.40000915527344" endY="-1.52587890625E-5" layoutX="116.0" layoutY="344.0" startX="-100.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="dashboard_mainForm" layoutX="227.0" layoutY="110.0" prefHeight="478.0" prefWidth="830.0" style="-fx-border-color: black;" visible="false">
+         <children>
+            <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="82.0" prefWidth="166.0" style="-fx-border-color: black;">
+               <children>
+                  <Label layoutX="24.0" layoutY="50.0" text="Active Doctor" />
+                  <Label fx:id="dashboard_AD" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="83.0" layoutY="14.0" prefHeight="18.0" prefWidth="72.0" text="0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="217.0" layoutY="14.0" prefHeight="82.0" prefWidth="166.0" style="-fx-border-color: black;">
+               <children>
+                  <Label layoutX="24.0" layoutY="50.0" text="Total Patients" />
+                  <Label fx:id="dashboard_TP" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="83.0" layoutY="14.0" prefHeight="18.0" prefWidth="72.0" text="0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="407.0" layoutY="14.0" prefHeight="82.0" prefWidth="166.0" style="-fx-border-color: black;">
+               <children>
+                  <Label layoutX="24.0" layoutY="50.0" text="Active Patients" />
+                  <Label fx:id="dashboard_AP" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="83.0" layoutY="14.0" prefHeight="18.0" prefWidth="72.0" text="0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="14.0" layoutY="116.0" prefHeight="348.0" prefWidth="434.0" style="-fx-border-color: black;">
+               <children>
+                  <Label layoutX="23.0" layoutY="11.0" text="Doctor&quot;s Info" />
+                  <TableView fx:id="dashboard_tableview" layoutX="15.0" layoutY="61.0" prefHeight="288.0" prefWidth="405.0" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="16.19999999999999" AnchorPane.topAnchor="61.0">
+                     <columns>
+                        <TableColumn fx:id="dash_col_doctorID" prefWidth="75.0" text="Doctor ID" />
+                        <TableColumn fx:id="dash_col_name" prefWidth="122.4000244140625" text="Name" />
+                        <TableColumn fx:id="dash_col_specialized" prefWidth="118.4000244140625" text="Specialized" />
+                        <TableColumn fx:id="dash_col_status" prefWidth="91.99993896484375" text="Status" />
+                     </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="465.0" layoutY="116.0" prefHeight="168.0" prefWidth="362.0" style="-fx-border-color: black;">
+               <children>
+                  <AreaChart fx:id="dash_chart_PD" layoutX="1.6" layoutY="1.6" prefHeight="168.0" prefWidth="362.4" title="Patient's Data" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis side="LEFT" />
+                     </yAxis>
+                  </AreaChart>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="465.0" layoutY="298.0" prefHeight="176.0" prefWidth="362.0" style="-fx-border-color: black;">
+               <children>
+                  <BarChart fx:id="dash_chart_DD" layoutX="4.8" layoutY="16.0" prefHeight="176.0" prefWidth="362.4" title="Doctor's Data" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <xAxis>
+                        <CategoryAxis side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis side="LEFT" />
+                     </yAxis>
+                  </BarChart>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="597.0" layoutY="14.0" prefHeight="82.0" prefWidth="166.0" style="-fx-border-color: black;">
+               <children>
+                  <Label layoutX="24.0" layoutY="50.0" text="Total Appointment" />
+                  <Label fx:id="dashboard_TA" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="83.0" layoutY="14.0" prefHeight="18.0" prefWidth="72.0" text="0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="doctors_form" layoutX="227.0" layoutY="110.0" prefHeight="478.0" prefWidth="830.0" style="-fx-border-color: black;" visible="false">
+         <children>
+            <AnchorPane layoutX="7.0" layoutY="8.0" prefHeight="458.0" prefWidth="818.0">
+               <children>
+                  <Label layoutX="28.0" layoutY="21.0" text="doctors" />
+                  <TableView fx:id="doctors_tableview" layoutY="50.0" prefHeight="384.0" prefWidth="815.0">
+                     <columns>
+                        <TableColumn fx:id="doctors_col_doctorID" prefWidth="75.0" text="Doctor ID" />
+                        <TableColumn fx:id="doctors_col_name" prefWidth="88.79998779296875" text="Name" />
+                        <TableColumn fx:id="doctors_col_gender" prefWidth="84.0" text="Gender" />
+                        <TableColumn fx:id="doctors_col_contact" prefWidth="87.20001220703125" text="Contact" />
+                        <TableColumn fx:id="doctors_col_email" prefWidth="77.5999755859375" text="Email" />
+                        <TableColumn fx:id="doctors_col_specialization" prefWidth="123.99993896484375" text="Specializtion" />
+                        <TableColumn fx:id="doctors_col_address" prefWidth="101.60003662109375" text="Address" />
+                        <TableColumn fx:id="doctors_col_status" prefWidth="80.7999267578125" text="Status" />
+                        <TableColumn fx:id="doctors_col_action" prefWidth="135.20001220703125" text="Action" />
+                     </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="patients_form" layoutX="231.0" layoutY="110.0" prefHeight="478.0" prefWidth="830.0" style="-fx-border-color: black;" visible="false">
+         <children>
+            <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="458.0" prefWidth="470.0" style="-fx-border-color: purple;">
+               <children>
+                  <Label layoutX="10.0" layoutY="11.0" text="Patients Info" />
+                  <Label layoutX="18.0" layoutY="59.0" text="Patients ID" />
+                  <TextField fx:id="patients_patientID" layoutX="14.0" layoutY="77.0" prefHeight="26.0" prefWidth="283.0" promptText="123456" />
+                  <Label layoutX="19.0" layoutY="110.0" text="Patients Name" />
+                  <TextField fx:id="patients_patientName" layoutX="15.0" layoutY="128.0" prefHeight="26.0" prefWidth="283.0" promptText="asif" />
+                  <Label layoutX="19.0" layoutY="166.0" text="Patients Gender" />
+                  <ComboBox fx:id="patients_patientGender" layoutX="14.0" layoutY="188.0" prefHeight="26.0" prefWidth="87.0" promptText="Select" />
+                  <Label layoutX="19.0" layoutY="229.0" text="Mobile Number" />
+                  <TextField fx:id="patients_mobile" layoutX="15.0" layoutY="247.0" prefHeight="26.0" prefWidth="283.0" promptText="01...." />
+                  <Label layoutX="19.0" layoutY="327.0" text="Address" />
+                  <TextField fx:id="patients_address" layoutX="15.0" layoutY="345.0" prefHeight="66.0" prefWidth="361.0" promptText="ex: sayednagar, vatara" />
+                  <Label layoutX="19.0" layoutY="278.0" text="Password" />
+                  <TextField fx:id="patients_password" layoutX="15.0" layoutY="296.0" prefHeight="26.0" prefWidth="283.0" promptText="at least 8 charecter" />
+                  <Button layoutX="112.0" layoutY="419.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="219.0" text="Confirm" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="493.0" layoutY="14.0" prefHeight="209.0" prefWidth="328.0" style="-fx-border-color: #87CEEB;">
+               <children>
+                  <Label layoutX="40.0" layoutY="50.0" text="Patients ID:" />
+                  <Label layoutX="40.0" layoutY="77.0" text="Password:" />
+                  <Label layoutX="40.0" layoutY="105.0" text="Date Created:" />
+                  <Label fx:id="patients_PA_patientID" layoutX="122.0" layoutY="50.0" text="........" />
+                  <Label fx:id="patients_PA_password" layoutX="122.0" layoutY="77.0" text="........" />
+                  <Label fx:id="patients_PA_dateCreated" layoutX="122.0" layoutY="105.0" text="........." />
+                  <Label layoutX="14.0" layoutY="14.0" text="Patients Account" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="492.0" layoutY="262.0" prefHeight="209.0" prefWidth="328.0" style="-fx-border-color: #87CEEB;">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" text="Patients Info" />
+                  <Label layoutX="39.0" layoutY="47.0" text="Patient Name:" />
+                  <Label layoutX="39.0" layoutY="75.0" text="Patient Gender:" />
+                  <Label layoutX="39.0" layoutY="105.0" text="Mobile Number:" />
+                  <Label layoutX="39.0" layoutY="133.0" text="Address:" />
+                  <Label fx:id="patients_PI_patientName" layoutX="143.0" layoutY="46.0" text="........" />
+                  <Label fx:id="patients_PI_patientGender" layoutX="143.0" layoutY="74.0" text="........" />
+                  <Label fx:id="patients_PI_mobileNumber" layoutX="143.0" layoutY="106.0" text="........" />
+                  <Label fx:id="patients_PI_address" layoutX="143.0" layoutY="134.0" text="........" />
+                  <Button fx:id="patients_PI_addbtn" layoutX="36.0" layoutY="171.0" mnemonicParsing="false" text="Add" />
+                  <Button fx:id="patients_PI_recordbtn" layoutX="164.0" layoutY="171.0" mnemonicParsing="false" text="Record" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="appointments_form" layoutX="231.0" layoutY="110.0" prefHeight="478.0" prefWidth="830.0" style="-fx-border-color: black;">
+         <children>
+            <AnchorPane layoutX="7.0" layoutY="8.0" prefHeight="226.0" prefWidth="818.0" style="-fx-border-color: #000080;">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" text="Appointment" />
+                  <TableView fx:id="appointment_tableview" layoutY="43.0" onSort="#appointmentShowData" prefHeight="168.0" prefWidth="815.0">
+                     <columns>
+                        <TableColumn fx:id="appointments_col_appointsmentsID" prefWidth="92.00001525878906" text="Appointment ID" />
+                        <TableColumn fx:id="appointments_col_name" prefWidth="67.99996948242188" text="Name" />
+                        <TableColumn fx:id="appointments_col_gender" prefWidth="80.79998779296875" text="Gender" />
+                        <TableColumn fx:id="appointments_col_contact" prefWidth="84.79998779296875" text="Contact" />
+                        <TableColumn fx:id="appointments_col_description" prefWidth="84.79998779296875" text="Description" />
+                        <TableColumn fx:id="appointments_col_date" prefWidth="58.4000244140625" text="Date" />
+                        <TableColumn fx:id="appointments_col_dateModify" prefWidth="77.5999755859375" text="Date Modify" />
+                        <TableColumn fx:id="appointments_col_dateDelete" prefWidth="81.60003662109375" text="Date Delete" />
+                        <TableColumn fx:id="appointments_col_status" prefWidth="81.60009765625" text="Status" />
+                        <TableColumn fx:id="appointments_col_Action" prefWidth="149.59991455078125" text="Action" />
+                     </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="7.0" layoutY="250.0" prefHeight="210.0" prefWidth="815.0" style="-fx-border-color: #800000;">
+               <children>
+                  <Label layoutX="35.0" layoutY="19.0" text="Appointment ID:" />
+                  <TextField fx:id="appointment_appointID" layoutX="134.0" layoutY="15.0" />
+                  <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="35.0" layoutY="53.0" prefHeight="18.0" prefWidth="90.0" text="Name:" />
+                  <TextField fx:id="appointment_name" layoutX="134.0" layoutY="49.0" />
+                  <Label alignment="TOP_RIGHT" layoutX="35.0" layoutY="90.0" prefHeight="18.0" prefWidth="90.0" text="Gender:" />
+                  <Label alignment="TOP_RIGHT" layoutX="306.0" layoutY="19.0" prefHeight="18.0" prefWidth="87.0" text="Description:" />
+                  <TextField fx:id="appointment_description" layoutX="405.0" layoutY="15.0" />
+                  <Label alignment="TOP_RIGHT" layoutX="303.0" layoutY="53.0" prefHeight="18.0" prefWidth="90.0" text="Diagnosis:" />
+                  <TextField fx:id="appointment_diagnosis" layoutX="405.0" layoutY="49.0" />
+                  <Label alignment="TOP_RIGHT" layoutX="306.0" layoutY="90.0" prefHeight="18.0" prefWidth="90.0" text="Treatment:" />
+                  <TextField fx:id="appointment_treatment" layoutX="405.0" layoutY="86.0" />
+                  <Label alignment="TOP_RIGHT" layoutX="566.0" layoutY="19.0" prefHeight="18.0" prefWidth="90.0" text="Mobile #:" />
+                  <TextField fx:id="appointment_mobile" layoutX="665.0" layoutY="15.0" prefHeight="26.0" prefWidth="135.0" />
+                  <Label alignment="TOP_RIGHT" layoutX="566.0" layoutY="52.0" prefHeight="18.0" prefWidth="90.0" text="Address:" />
+                  <TextField fx:id="appointment_address" layoutX="665.0" layoutY="48.0" prefHeight="66.0" prefWidth="135.0" />
+                  <ComboBox fx:id="appointment_gender" layoutX="134.0" layoutY="86.0" onAction="#appointmentGenderList" prefWidth="150.0" promptText="Choose..." />
+                  <Label alignment="TOP_RIGHT" layoutX="583.0" layoutY="133.0" prefHeight="18.0" prefWidth="90.0" text="Status:" />
+                  <ComboBox fx:id="appointment_status" layoutX="682.0" layoutY="129.0" prefHeight="26.0" prefWidth="100.0" promptText="Choose..." />
+                  <Button fx:id="appointment_insertbtn" layoutX="157.0" layoutY="156.0" mnemonicParsing="false" onAction="#appointmentInsertBtn" text="Insert" />
+                  <Button fx:id="appointment_updatebtn" layoutX="230.0" layoutY="155.0" mnemonicParsing="false" onAction="#appointmentUpdateBtn" text="Update" />
+                  <Button fx:id="appointment_clearbtn" layoutX="315.0" layoutY="156.0" mnemonicParsing="false" onAction="#appointmentClearBtn" text="Clear" />
+                  <Button fx:id="appointment_deletebtn" layoutX="382.0" layoutY="155.0" mnemonicParsing="false" onAction="#appointmentDeleteBtn" text="Delete" />
+                  <DatePicker fx:id="appointment_schedule" layoutX="405.0" layoutY="116.0" prefHeight="26.0" prefWidth="150.0" />
+                  <Label alignment="TOP_RIGHT" layoutX="313.0" layoutY="120.0" prefHeight="18.0" prefWidth="90.0" text="Schedule:" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="profile_form" layoutX="231.0" layoutY="110.0" prefHeight="478.0" prefWidth="818.0" style="-fx-border-color: black;" visible="false" />
+   </children>
+</AnchorPane>
