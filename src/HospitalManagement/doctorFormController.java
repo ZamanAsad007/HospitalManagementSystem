@@ -1,6 +1,11 @@
 package HospitalManagement;
 
+import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -31,7 +37,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.ImagePattern;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class doctorFormController implements Initializable {
@@ -44,6 +54,9 @@ public class doctorFormController implements Initializable {
 
     @FXML
     private Button appointment_btn;
+
+    @FXML
+    private Button doctor_logoutbtn;
 
     @FXML
     private Button appointment_clearbtn;
@@ -119,29 +132,31 @@ public class doctorFormController implements Initializable {
     @FXML
     private Label current_form;
 
-    @FXML
-    private BarChart<?, ?> dash_chart_DD;
+     @FXML
+    private BarChart<appointmentData, String> dash_chart_NA;
 
     @FXML
-    private AreaChart<?, ?> dash_chart_PD;
+    private AreaChart<appointmentData, String> dash_chart_NP;
 
     @FXML
-    private TableColumn<?, ?> dash_col_doctorID;
+    private TableColumn<appointmentData, String> dash_col_appointID;
 
     @FXML
-    private TableColumn<?, ?> dash_col_name;
+    private TableColumn<appointmentData, String> dash_col_name;
 
     @FXML
-    private TableColumn<?, ?> dash_col_specialized;
+    private TableColumn<appointmentData, String> dash_col_description;
+    @FXML
+    private TableColumn<appointmentData, String> dash_col_appointDate;
 
     @FXML
-    private TableColumn<?, ?> dash_col_status;
-
-    @FXML
-    private Label dashboard_AD;
+    private TableColumn<appointmentData, String> dash_col_status;
 
     @FXML
     private Label dashboard_AP;
+
+    @FXML
+    private Label dashboard_IP;
 
     @FXML
     private Label dashboard_TA;
@@ -156,7 +171,7 @@ public class doctorFormController implements Initializable {
     private AnchorPane dashboard_mainForm;
 
     @FXML
-    private TableView<?> dashboard_tableview;
+    private TableView<appointmentData> dashboard_tableview;
 
     @FXML
     private Label date_time;
@@ -259,6 +274,52 @@ public class doctorFormController implements Initializable {
 
     @FXML
     private Button profile_btn;
+     @FXML
+    private TextField profile_address;
+
+    
+
+    @FXML
+    private AnchorPane profile_circleImage;
+
+    @FXML
+    private TextField profile_doctorID;
+
+    @FXML
+    private TextField profile_email;
+
+    @FXML
+    private ComboBox<String> profile_gender;
+
+    @FXML
+    private Button profile_importBtn;
+
+    @FXML
+    private Label profile_label_dateCreated;
+
+    @FXML
+    private Label profile_label_doctorID;
+
+    @FXML
+    private Label profile_label_email;
+
+    @FXML
+    private Label profile_label_name;
+
+    @FXML
+    private TextField profile_mobile;
+
+    @FXML
+    private TextField profile_name;
+
+    @FXML
+    private ComboBox<String> profile_specialization;
+
+    @FXML
+    private ComboBox<String> profile_status;
+
+    @FXML
+    private Button profile_updateBtn;
 
     @FXML
     private Label top_username;
@@ -267,6 +328,170 @@ public class doctorFormController implements Initializable {
     private java.sql.Statement statement;
     private ResultSet result;
     private final AlertMessage alert = new AlertMessage();
+
+    
+    public void dashbboardDisplayIP() {
+        String sql = "SELECT COUNT(id) FROM patient WHERE status = 'Inactive' AND doctor = '"
+                + Data.doctor_id + "'";
+        connect = Database.connectDB();
+        int getIP = 0;
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                getIP = result.getInt("COUNT(id)");
+            }
+            dashboard_IP.setText(String.valueOf(getIP));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void dashbboardDisplayTP() {
+        String sql = "SELECT COUNT(id) FROM patient WHERE doctor = '"
+                + Data.doctor_id + "'";
+        connect = Database.connectDB();
+        int getTP = 0;
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                getTP = result.getInt("COUNT(id)");
+            }
+            dashboard_TP.setText(String.valueOf(getTP));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void dashbboardDisplayAP() {
+        String sql = "SELECT COUNT(id) FROM patient WHERE status = 'Active' AND doctor = '"
+                + Data.doctor_id + "'";
+        connect = Database.connectDB();
+        int getAP = 0;
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                getAP = result.getInt("COUNT(id)");
+            }
+            dashboard_TP.setText(String.valueOf(getAP));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void dashbboardDisplayTA() {
+        String sql = "SELECT COUNT(id) FROM appointment WHERE status = 'Active' AND doctor = '"
+                + Data.doctor_id + "'";
+        connect = Database.connectDB();
+        int getTA = 0;
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                getTA = result.getInt("COUNT(id)");
+            }
+            dashboard_TA.setText(String.valueOf(getTA));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public ObservableList<appointmentData> dashboardAppointmentTableView() {
+
+        ObservableList<appointmentData> listData = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM appointment WHERE doctor = '"
+                + Data.doctor_id + "'";
+
+        connect = Database.connectDB();
+
+        try {
+
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            appointmentData aData;
+            while (result.next()) {
+                aData = new appointmentData(result.getInt("appointment_id"),
+                        result.getString("name"), result.getString("description"),
+                        result.getDate("date"), result.getString("status"));
+
+                listData.add(aData);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
+      private ObservableList<appointmentData> dashboardGetData;
+
+    public void dashboardDisplayData() {
+        dashboardGetData = dashboardAppointmentTableView();
+
+        dash_col_appointID.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        dash_col_name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        dash_col_description.setCellValueFactory(new PropertyValueFactory<>("description"));
+        dash_col_appointDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        dash_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        dashboard_tableview.setItems(dashboardGetData);
+    }
+
+    public void dashboardNOP() {
+
+        dash_chart_NP.getData().clear();
+
+        String sql = "SELECT date, COUNT(id) FROM patient WHERE doctor = '"
+                + Data.doctor_id + "' GROUP BY TIMESTAMP(date) ASC LIMIT 8";
+        connect = Database.connectDB();
+
+        try {
+            XYChart.Series chart = new XYChart.Series<>();
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                chart.getData().add(new XYChart.Data<>(result.getString(1), result.getInt(2)));
+            }
+
+            dash_chart_NP.getData().add(chart);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void dashboardNOA() {
+
+        dash_chart_NA.getData().clear();
+
+        String sql = "SELECT date, COUNT(id) FROM appointment WHERE doctor = '"
+                + Data.doctor_id + "' GROUP BY TIMESTAMP(date) ASC LIMIT 7";
+        connect = Database.connectDB();
+
+        try {
+            XYChart.Series chart = new XYChart.Series<>();
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                chart.getData().add(new XYChart.Data<>(result.getString(1), result.getInt(2)));
+            }
+
+            dash_chart_NA.getData().add(chart);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     public void switchForm(ActionEvent event) {
         if (event.getSource() == dashboard_btn) {
@@ -769,10 +994,235 @@ public class doctorFormController implements Initializable {
         appointment_schedule.setValue(null);
     }
 
+    public void profileLabels() {
+        String selectData = "SELECT * FROM doctor WHERE doctor_id = '"
+                + Data.doctor_id + "'";
+        connect = Database.connectDB();
+
+        try {
+            prepare = connect.prepareStatement(selectData);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                profile_label_doctorID.setText(result.getString("doctor_id"));
+                profile_label_name.setText(result.getString("full_name"));
+                profile_label_email.setText(result.getString("email"));
+                profile_label_dateCreated.setText(result.getString("date"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // public void profileChangeProfile() {
+
+    //     FileChooser open = new FileChooser();
+    //     open.getExtensionFilters().add(new ExtensionFilter("Open Image", "*png", "*jpg", "*jpeg"));
+
+    //     File file = open.showOpenDialog(profile_importBtn.getScene().getWindow());
+
+    //     if (file != null) {
+    //         Data.path = file.getAbsolutePath();
+
+    //         image = new Image(file.toURI().toString(), 128, 103, false, true);
+    //         profile_circleImage.setFill(new ImagePattern(image));
+    //     }
+
+    // }
+    public void profileUpdateBtn() {
+
+        connect = Database.connectDB();
+
+        if (profile_doctorID.getText().isEmpty()
+                || profile_name.getText().isEmpty()
+                || profile_email.getText().isEmpty()
+                || profile_gender.getSelectionModel().getSelectedItem() == null
+                || profile_mobile.getText().isEmpty()
+                || profile_address.getText().isEmpty()
+                || profile_specialization.getSelectionModel().getSelectedItem() == null
+                || profile_status.getSelectionModel().getSelectedItem() == null) {
+            alert.errorMessage("Please fill all blank fields");
+        } else {
+            // CHECK IF THE PATH IS NULL 
+            if (Data.path == null || "".equals(Data.path)) {
+                String updateData = "UPDATE doctor SET full_name = ?, email = ?"
+                        + ", gender = ?, mobile_number = ?, address = ?, specialized = ?, status = ?, modify_date = ?"
+                        + " WHERE doctor_id = '"
+                        + Data.doctor_id + "'";
+                try {
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare = connect.prepareStatement(updateData);
+                    prepare.setString(1, profile_name.getText());
+                    prepare.setString(2, profile_email.getText());
+                    prepare.setString(3, profile_gender.getSelectionModel().getSelectedItem());
+                    prepare.setString(4, profile_mobile.getText());
+                    prepare.setString(5, profile_address.getText());
+                    prepare.setString(6, profile_specialization.getSelectionModel().getSelectedItem());
+                    prepare.setString(7, profile_status.getSelectionModel().getSelectedItem());
+                    prepare.setString(8, String.valueOf(sqlDate));
+
+                    prepare.executeUpdate();
+
+                    alert.successMessage("Updated Successfully!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                String updateData = "UPDATE doctor SET full_name = ?, email = ?"
+                        + ", gender = ?, mobile_number = ?, address = ?, image = ?, specialized = ?, status = ?, modify_date = ?"
+                        + " WHERE doctor_id = '"
+                        + Data.doctor_id + "'";
+                try {
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare = connect.prepareStatement(updateData);
+                    prepare.setString(1, profile_name.getText());
+                    prepare.setString(2, profile_email.getText());
+                    prepare.setString(3, profile_gender.getSelectionModel().getSelectedItem());
+                    prepare.setString(4, profile_mobile.getText());
+                    prepare.setString(5, profile_address.getText());
+                    String path = Data.path;
+                    path = path.replace("\\", "\\\\");
+                    Path transfer = Paths.get(path);
+
+                    // LINK YOUR DIRECTORY FOLDER
+                    Path copy = Paths.get("C:\\Users\\WINDOWS 10\\Documents\\NetBeansProjects\\HospitalManagementSystem\\src\\Directory\\"
+                            + Data.doctor_id + ".jpg");
+
+                    try {
+                        // TO PUT THE IMAGE FILE TO YOUR DIRECTORY FOLDER
+                        Files.copy(transfer, copy, StandardCopyOption.REPLACE_EXISTING);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    prepare.setString(6, copy.toAbsolutePath().toString());
+                    prepare.setString(7, profile_specialization.getSelectionModel().getSelectedItem());
+                    prepare.setString(8, profile_status.getSelectionModel().getSelectedItem());
+                    prepare.setString(9, String.valueOf(sqlDate));
+
+                    prepare.executeUpdate();
+
+                    alert.successMessage("Updated Successfully!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void profileFields() {
+        String selectData = "SELECT * FROM doctor WHERE doctor_id = '"
+                + Data.doctor_id + "'";
+
+        connect = Database.connectDB();
+        try {
+            prepare = connect.prepareStatement(selectData);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                profile_doctorID.setText(result.getString("doctor_id"));
+                profile_name.setText(result.getString("full_name"));
+                profile_email.setText(result.getString("email"));
+                profile_gender.getSelectionModel().select(result.getString("gender"));
+                profile_mobile.setText(result.getString("mobile_number"));
+                profile_address.setText(result.getString("address"));
+                profile_specialization.getSelectionModel().select(result.getString("specialized"));
+                profile_status.getSelectionModel().select(result.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void profileGenderList() {
+
+        List<String> listG = new ArrayList<>();
+
+        for (String data : Data.gender) {
+            listG.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listG);
+        profile_gender.setItems(listData);
+
+    }
+
+    private String[] specialization = {"Allergist", "Dermatologist", "Ophthalmologist", "Gynecologist", "Cardiologist"};
+
+    public void profileSpecializedList() {
+
+        List<String> listS = new ArrayList<>();
+
+        for (String data : specialization) {
+            listS.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listS);
+        profile_specialization.setItems(listData);
+    }
+
+    public void profileStatusList() {
+
+        List<String> listS = new ArrayList<>();
+
+        for (String data : Data.status) {
+            listS.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listS);
+        profile_status.setItems(listData);
+    }
+    
+    public void logoutBtn() {
+
+        try {
+            if (alert.confirmationMessage("Are you sure you want to logout?")) {
+                Data.doctor_id = "";
+                Data.doctor_name = "";
+                Parent root = FXMLLoader.load(getClass().getResource("DoctorPage.fxml"));
+                Stage stage = new Stage();
+
+                stage.setScene(new Scene(root));
+                stage.show();
+
+                // TO HIDE YOUR MAIN FORM
+                doctor_logoutbtn.getScene().getWindow().hide();
+
+                Data.doctor_id = "";
+                Data.doctor_name = "";
+                Data.temp_PatientID = 0;
+                Data.temp_name = "";
+                Data.temp_gender = "";
+                Data.temp_number = Long.parseLong("0");
+                Data.temp_address = "";
+                Data.temp_status = "";
+                Data.temp_date = "";
+                Data.temp_path = "";
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         displayAdminIDNumberName();
         runTime();
+
+        dashbboardDisplayIP();
+        dashbboardDisplayTP();
+        dashbboardDisplayAP();
+        dashbboardDisplayTA();
+        dashboardDisplayData();
+        dashboardNOP();
+        dashboardNOA();
 
         appointmentShowData();
         appointmentGenderList();
@@ -780,6 +1230,12 @@ public class doctorFormController implements Initializable {
         appointmentAppointmentID();
 
         patientGenderList();
+
+        profileLabels();
+        profileFields(); // TO DISPLAY ALL DETAILS TO THE FIELDS
+        profileGenderList();
+        profileSpecializedList();
+        profileStatusList();
 
     }
 

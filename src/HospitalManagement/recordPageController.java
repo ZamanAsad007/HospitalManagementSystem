@@ -171,7 +171,7 @@ public class recordPageController implements Initializable {
                                 Data.temp_address = pData.getAddress();
                                 Data.temp_status = pData.getStatus();
                                 // NOW LETS CREATE FXML FOR EDIT PATIENT FORM
-                                Parent root = FXMLLoader.load(getClass().getResource("EditPatientForm.fxml"));
+                                Parent root = FXMLLoader.load(getClass().getResource("editPatientForm.fxml"));
                                 Stage stage = new Stage();
 
                                 stage.setScene(new Scene(root));
