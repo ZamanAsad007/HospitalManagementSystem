@@ -17,7 +17,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.Button;
@@ -29,6 +32,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 public class doctorFormController implements Initializable {
 
@@ -54,7 +58,7 @@ public class doctorFormController implements Initializable {
     private TextField appointment_diagnosis;
 
     @FXML
-    private ComboBox<?> appointment_gender;
+    private ComboBox<String> appointment_gender;
 
     @FXML
     private Button appointment_insertbtn;
@@ -66,7 +70,7 @@ public class doctorFormController implements Initializable {
     private TextField appointment_name;
 
     @FXML
-    private ComboBox<?> appointment_status;
+    private ComboBox<String> appointment_status;
 
     @FXML
     private TableView<appointmentData> appointment_tableview;
@@ -221,6 +225,9 @@ public class doctorFormController implements Initializable {
     private Label patients_PI_mobileNumber;
 
     @FXML
+    private Button patients_confirmbtn;
+
+    @FXML
     private Label patients_PI_patientGender;
 
     @FXML
@@ -242,7 +249,7 @@ public class doctorFormController implements Initializable {
     private TextField patients_password;
 
     @FXML
-    private ComboBox<?> patients_patientGender;
+    private ComboBox<String> patients_patientGender;
 
     @FXML
     private TextField patients_patientID;
@@ -285,6 +292,150 @@ public class doctorFormController implements Initializable {
         }
     }
 
+    public void patientConfirmBtn() {
+
+        // CHECK IF SOME OR ALL FIELDS ARE EMPTY
+        if (patients_patientID.getText().isEmpty()
+                || patients_patientName.getText().isEmpty()
+                || patients_patientGender.getSelectionModel().getSelectedItem() == null
+                || patients_mobile.getText().isEmpty()
+                || patients_password.getText().isEmpty()
+                || patients_address.getText().isEmpty()) {
+            alert.errorMessage("Please fill all blank fields");
+        } else {
+            Date date = new Date();
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+            // TO DISPLAY THE DATA FROM PERSONAL ACCOUNT
+            patients_PA_patientID.setText(patients_patientID.getText());
+            patients_PA_password.setText(patients_password.getText());
+            patients_PA_dateCreated.setText(String.valueOf(sqlDate));
+
+            // TO DISPLAY THE DATA FROM PERSONAL INFORMATION
+            patients_PI_patientName.setText(patients_patientName.getText());
+            patients_PI_patientGender.setText(patients_patientGender.getSelectionModel().getSelectedItem());
+            patients_PI_mobileNumber.setText(patients_mobile.getText());
+            patients_PI_address.setText(patients_address.getText());
+        }
+
+    }
+
+    public void patientAddBtn() {
+
+        if (patients_PA_patientID.getText().isEmpty()
+                || patients_PA_password.getText().isEmpty()
+                || patients_PA_dateCreated.getText().isEmpty()
+                || patients_PI_patientName.getText().isEmpty()
+                || patients_PI_patientGender.getText().isEmpty()
+                || patients_PI_mobileNumber.getText().isEmpty()
+                || patients_PI_address.getText().isEmpty()) {
+            alert.errorMessage("Something wenr wrong");
+        } else {
+
+            Database.connectDB();
+            try {
+                String doctorName = "";
+                String doctorSpecialized = "";
+
+                String getDoctor = "SELECT * FROM doctor WHERE doctor_id = '"
+                        + nav_adminID.getText() + "'";
+
+                statement = connect.createStatement();
+                result = statement.executeQuery(getDoctor);
+
+                if (result.next()) {
+                    doctorName = result.getString("full_name");
+                    doctorSpecialized = result.getString("specialized");
+                }
+                // CHECK IF THE PATIENT ID THAT THE DOCTORS WANT TO INSERT/ADD IS EXISTING
+                // ALREADY
+                String checkPatientID = "SELECT * FROM patient WHERE patient_id = '"
+                        + patients_PA_patientID.getText() + "'";
+                statement = connect.createStatement();
+                result = statement.executeQuery(checkPatientID);
+                if (result.next()) {
+                    alert.errorMessage(patients_PA_patientID.getText() + " is already exist");
+                } else {
+
+                    String insertData = "INSERT INTO patient (patient_id, password, full_name, gender, mobile_number, "
+                            + "address, doctor, specialized, date, status) "
+                            + "VALUES(?,?,?,?,?,?,?,?,?,?)";
+                    prepare = connect.prepareStatement(insertData);
+
+                    Date date = new Date();
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    prepare.setString(1, patients_PA_patientID.getText());
+                    prepare.setString(2, patients_PA_password.getText());
+                    prepare.setString(3, patients_PI_patientName.getText());
+                    prepare.setString(4, patients_PI_patientGender.getText()); // ✅ make sure gender comes here
+                    prepare.setString(5, patients_PI_mobileNumber.getText());
+                    prepare.setString(6, patients_PI_address.getText());
+                    prepare.setString(7, nav_adminID.getText());
+                    prepare.setString(8, doctorSpecialized);
+                    prepare.setString(9, "" + sqlDate);
+                    prepare.setString(10, "Confirm");
+
+                    prepare.executeUpdate();
+
+                    alert.successMessage("Added successfully!");
+                    // TO CLEAR ALL FIELDS AND SOME LABELS
+                    patientClearFields();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // NOW, LETS TRY
+        }
+    }
+
+    public void patientRecordBtn() {
+        try {
+            // LINK THE NAME OF YOUR FXML FOR RECORD PAGE
+            Parent root = FXMLLoader.load(getClass().getResource("recordPage.fxml"));
+            Stage stage = new Stage();
+
+            stage.setTitle("Hospital Management System | Record of Patients");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void patientClearFields() {
+        patients_patientID.clear();
+        patients_patientName.clear();
+        patients_patientGender.getSelectionModel().clearSelection();
+        patients_mobile.clear();
+        patients_password.clear();
+        patients_address.clear();
+
+        patients_PA_patientID.setText("");
+        patients_PA_password.setText("");
+        patients_PA_dateCreated.setText("");
+
+        patients_PI_patientName.setText("");
+        patients_PI_patientGender.setText("");
+        patients_PI_mobileNumber.setText("");
+        patients_PI_address.setText("");
+    }
+
+    private void patientGenderList() {
+
+        List<String> listG = new ArrayList<>();
+
+        for (String data : Data.gender) {
+            listG.add(data);
+        }
+        ObservableList listData = FXCollections.observableList(listG);
+
+        patients_patientGender.setItems(listData);
+
+    }
+
     public ObservableList<appointmentData> appointmentGetData() {
 
         ObservableList<appointmentData> listData = FXCollections.observableArrayList();
@@ -302,9 +453,10 @@ public class doctorFormController implements Initializable {
             appointmentData appData;
 
             while (result.next()) {
-//            Integer appointmentID, String name, String gender,
-//            Long mobileNumber, String description, String diagnosis, String treatment, String address,
-//            Date date, Date dateModify, Date dateDelete, String status, Date schedule
+                // Integer appointmentID, String name, String gender,
+                // Long mobileNumber, String description, String diagnosis, String treatment,
+                // String address,
+                // Date date, Date dateModify, Date dateDelete, String status, Date schedule
 
                 appData = new appointmentData(result.getInt("appointment_id"),
                         result.getString("name"), result.getString("gender"),
@@ -322,6 +474,7 @@ public class doctorFormController implements Initializable {
         }
         return listData;
     }
+
     public ObservableList<appointmentData> appoinmentListData;
 
     public void appointmentGenderList() {
@@ -424,10 +577,11 @@ public class doctorFormController implements Initializable {
             }
         }.start();
     }
+
     public void appointmentSelect() {
 
-        AppointmentData appData = appointments_tableView.getSelectionModel().getSelectedItem();
-        int num = appointments_tableView.getSelectionModel().getSelectedIndex();
+        appointmentData appData = appointment_tableview.getSelectionModel().getSelectedItem();
+        int num = appointment_tableview.getSelectionModel().getSelectedIndex();
 
         if ((num - 1) < -1) {
             return;
@@ -447,7 +601,7 @@ public class doctorFormController implements Initializable {
 
     public void appointmentInsertBtn() {
 
-//        CHECK IF THE FIELD(S) ARE EMPTY
+        // CHECK IF THE FIELD(S) ARE EMPTY
         if (appointment_appointID.getText().isEmpty()
                 || appointment_name.getText().isEmpty()
                 || appointment_gender.getSelectionModel().getSelectedItem() == null
@@ -517,7 +671,8 @@ public class doctorFormController implements Initializable {
         }
 
     }
-public void appointmentUpdateBtn() {
+
+    public void appointmentUpdateBtn() {
 
         if (appointment_appointID.getText().isEmpty()
                 || appointment_name.getText().isEmpty()
@@ -623,7 +778,9 @@ public void appointmentUpdateBtn() {
         appointmentGenderList();
         appointmentStatusList();
         appointmentAppointmentID();
-        
+
+        patientGenderList();
+
     }
-    
+
 }
